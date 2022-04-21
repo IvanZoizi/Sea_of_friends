@@ -1,7 +1,7 @@
 from urllib.request import urlopen
 
 from flask import Flask, render_template, redirect, request
-from flask_login import LoginManager, login_user, current_user
+from flask_login import LoginManager, login_user, current_user, login_required
 
 import os
 import json
@@ -12,15 +12,15 @@ from forms.register import RegisterForm
 from forms.login import LoginForm
 from data.user import User
 from data.private_post import PrivatePost
-from data.userautho import UserAutho
 from data.reguser import RegUser
 from forms.post import PostForm
+from data.public_post import PublicPost
 
 from mail import send_mail
 
 
 app = Flask(__name__)
-app.config['SECRETKEY'] = 'hakatonchik_one_love'
+app.config['SECRET_KEY'] = 'hakatonchik_one_love'
 login_manager = LoginManager()
 login_manager.init_app(app)
 
@@ -41,7 +41,7 @@ def main():
 @app.route('/')
 def base_window():
     db_sess = db_session.create_session()
-    return render_template('')
+    return 'Привет'
 
 
 @app.route('/register', methods=['GET', "POST"])
@@ -61,7 +61,7 @@ def register():
         db_sess.commit()
         send_mail(form.email.data)
         return redirect('/')
-    return render_template('')
+    return render_template('forms.html', form=form)
 
 
 @app.route('/login', methods=['GET', "POST"])
@@ -70,11 +70,12 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = db_sess.query(User).filter(User.email == form.email.data).first()
+        print(user)
         if user and user.check_password(form.password.data):
-            return render_template('')
-        login_user(user, remember=form.remember_me.data)
-        return redirect("/login")
-    return render_template('')
+            login_user(user, remember=form.remember_me.data)
+            return redirect("/")
+        return render_template('login.html', form=form, message='Некорректный логин или пароль')
+    return render_template('login.html', form=form)
 
 
 @app.route('/login/<string:email>')
@@ -93,6 +94,7 @@ def authokey(email):
     return redirect('/')
 
 
+@login_required
 @app.route('/add/post')
 def add_post():
     db_sess = db_session.create_session()
@@ -100,12 +102,18 @@ def add_post():
     if form.validate_on_submit():
         if form.private:
             post = PrivatePost()
-            post.id = current_user
+            post.creater = current_user.id
+            post.content = form.content.data
+            db_sess.add(post)
+            db_sess.commit()
+        else:
+            post = PublicPost()
             post.creater = current_user.id
             post.content = form.content.data
             db_sess.add(post)
             db_sess.commit()
             return render_template('/')
+
     return render_template('')
 
 

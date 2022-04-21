@@ -7,7 +7,7 @@ from sqlalchemy_serializer import SerializerMixin
 from .db_session import SqlAlchemyBase
 
 
-class RegUser(SqlAlchemyBase, UserMixin, SerializerMixin):
+class RegUser(SqlAlchemyBase, SerializerMixin):
     __tablename__ = 'regusers'
 
     id = sqlalchemy.Column(sqlalchemy.Integer,

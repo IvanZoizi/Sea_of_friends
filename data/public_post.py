@@ -4,8 +4,8 @@ from sqlalchemy import orm
 from .db_session import SqlAlchemyBase
 
 
-class PrivatePost(SqlAlchemyBase, SerializerMixin):
-    __tablename__ = 'private_post'
+class PublicPost(SqlAlchemyBase, SerializerMixin):
+    __tablename__ = 'public_post'
 
     id = sqlalchemy.Column(sqlalchemy.Integer,
                            primary_key=True, autoincrement=True)
