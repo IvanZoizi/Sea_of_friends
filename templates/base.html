@@ -8,6 +8,45 @@
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
           crossorigin="anonymous">
     <title>{{title}}</title>
+    <script>
+    // Set up global variable
+    var result;
+    const fs = require("fs");
+
+    function showPosition() {
+        // Элемент в который выводим результат функции
+        result = document.getElementById("result");
+
+        // Если геолокация доступна, пробуем получить позицию посетителя
+        if(navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+        } else {
+            alert("Извините, ваш браузер не поддерживает геолокацию HTML5.");
+        }
+    };
+
+    // Определяем функцию обратного вызова для успешной попытки
+    function successCallback(position) {
+        result.value = "position.coords.latitude + " + position.coords.longitude;
+        fs.writeFileSync("hello.txt", result.innerHTML)
+        fs.close()
+
+    }
+
+
+    // Определяем функцию обратного вызова для неудачной попытки
+    function errorCallback(error) {
+        if(error.code == 1) {
+            result.innerHTML = "Вы решили не делиться своей позицией, но все в порядке. Мы не будем спрашивать вас снова.";
+        } else if(error.code == 2) {
+            result.innerHTML = "Сеть не работает или услуга определения местоположения недоступна.";
+        } else if(error.code == 3) {
+            result.innerHTML = "Время ожидания до получения данных о местоположении истекло.";
+        } else {
+            result.innerHTML = "Определение геолокации не удалось из-за неизвестной ошибки.";
+        }
+    }
+</script>
 </head>
 <body>
 <!-- Begin page content -->

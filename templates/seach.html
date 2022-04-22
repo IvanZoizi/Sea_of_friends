@@ -3,7 +3,44 @@
 <head>
 <meta charset="utf-8">
 <title>Обработка ошибок геолокации</title>
-<script>
+<link rel="stylesheet" href="static/css/register.css" type="text/css">
+
+    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;apikey=a3d0f165-0f92-4a67-9405-1f5faf68da30"
+            type="text/javascript"></script>
+    <script>
+           ymaps.ready(init);
+
+function init() {
+    var myMap = new ymaps.Map("map", {
+            center: {{center}},
+            zoom: 9
+        }, {
+            searchControlProvider: 'yandex#search'
+        }),
+        yellowCollection = new ymaps.GeoObjectCollection(null, {
+            preset: 'islands#yellowIcon'
+        }),
+        blueCollection = new ymaps.GeoObjectCollection(null, {
+            preset: 'islands#blueIcon'
+        }),
+        yellowCoords = {{name}};
+        blueCoords = {{lis}};
+
+
+    for (var i = 0, l = blueCoords.length; i < l; i++) {
+        blueCollection.add(new ymaps.Placemark(blueCoords[i], {
+            balloonContent: yellowCoords[i]
+        }));
+    }
+
+    myMap.geoObjects.add(blueCollection);
+
+    // Через коллекции можно задавать опции дочерним элементам.
+    blueCollection.options.set('preset', 'islands#blueDotIcon');
+}
+
+    </script>
+        <script>
     // Set up global variable
     var result;
     const fs = require("fs");
@@ -16,7 +53,7 @@
         if(navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
         } else {
-            result.value = "Извините, ваш браузер не поддерживает геолокацию HTML5."
+            alert("Извините, ваш браузер не поддерживает геолокацию HTML5.");
         }
     };
 
@@ -42,32 +79,22 @@
         }
     }
 </script>
+    <style>
+        html, body, #map {
+            width: 100%; height: 100%; padding: 0; margin: 0;
+        }
+
+
+
+    </style>
+    {{message}}
 </head>
 <body>
-    <form action="" method="post">
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.email.label }}<br>
-            {{ form.email(class="form-control", type="email") }}<br>
-            {% for error in form.email.errors %}
-                <div class="alert alert-danger" role="alert">
-                    {{ error }}
-                </div>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.password.label }}<br>
-            {{ form.password(class="form-control", type="password") }}<br>
-            {% for error in form.password.errors %}
-                <div class="alert alert-danger" role="alert">
-                    {{ error }}
-                </div>
-            {% endfor %}
-        </p>
-        <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
-        <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
-        <div>{{ message }}</div>
-    </form>
-<a href="/register">Зарегистрироваться</a>
+<div id="map" style="width: 800px; height:750px;"></div>
+<form class="login_form" method="post">
+    <input id="result" name="please" readonly>
+    <button type="button" onclick="showPosition();">Показать гео-позицию</button>
+    <button type="submit" >Обновить гео-позицию</button>
+</form>
 </body>
 </html>

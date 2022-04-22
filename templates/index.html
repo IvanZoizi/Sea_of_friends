@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <title>main</title>
+</head>
+<body>
+    <header class="header-main-page">
+        {% if current_user.id %}
+        <a href="/logout">{{current_user.name}}</a>
+        {% else %}
+        <a href="/login">Войти/Зарегистрироваться</a>
+        {% endif %}
+    </header>
+    <nav>
+        <ul class="main_page_nav">
+            <li><a href="/">ГЛАВНАЯ</a></li>
+            <li><a href="/seach/friend">ПОИСК РЯДОМ</a></li>
+            <li><a href="/communities">СООБЩЕСТВА</a></li>
+            <li><a href="/contact">КОНТАКТЫ</a></li>
+        </ul>
+    </nav>
+    <main>
+        <section>
+            {% for i in message %}
+                <div>
+                    <h1>{{i.creater.name}}</h1>
+                    <p>{{i.content}}</p>
+                </div>
+            {% endfor %}
+        </section>
+    </main>
+    <footer></footer>
+</body>
+</html>

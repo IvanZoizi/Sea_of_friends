@@ -1,46 +1,104 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Обработка ошибок геолокации</title>
+<script>
+    // Set up global variable
+    var result;
+    const fs = require("fs");
+    
+    function showPosition() {
+        // Элемент в который выводим результат функции
+        result = document.getElementById("result");
+        
+        // Если геолокация доступна, пробуем получить позицию посетителя
+        if(navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+        } else {
+            result.value = "Извините, ваш браузер не поддерживает геолокацию HTML5."
+        }
+    };
+    
+    // Определяем функцию обратного вызова для успешной попытки
+    function successCallback(position) {
+        result.value = position.coords.latitude + "," + position.coords.longitude;
+        fs.writeFileSync("hello.txt", result.innerHTML)
+        fs.close()
 
-{% block content %}
-<h1>Регистрация</h1>
-<form action="" method="post">
-    {{ form.hidden_tag() }}
-    <h2>Register Form</h2>
-    <p>
-        {{ form.email.label }}<br>
-        {{ form.email(class="form-control", type="email") }}<br>
-        {% for error in form.email.errors %}
-            <p class="alert alert-danger" role="alert">
-                {{ error }}
-            </p>
-        {% endfor %}
-    </p>
-    <p>
-        {{ form.password.label }}<br>
-        {{ form.password(class="form-control", type="password") }}<br>
-        {% for error in form.password.errors %}
-            <p class="alert alert-danger" role="alert">
-                {{ error }}
-            </p>
-        {% endfor %}
-    </p>
-    <p>
-        {{ form.password_again.label }}<br>
-        {{ form.password_again(class="form-control", type="password") }}<br>
-        {% for error in form.password_again.errors %}
-            <p class="alert alert-danger" role="alert">
-                {{ error }}
-            </p>
-        {% endfor %}
-    </p>
-    <p>
-        {{ form.name.label }}<br>
-        {{ form.name(class="form-control", type="name") }}<br>
-        {% for error in form.name.errors %}
-            <p class="alert alert-danger" role="alert">
-                {{ error }}
-            </p>
-        {% endfor %}
-    <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
-    {{message}}
+    }
+
+    
+    // Определяем функцию обратного вызова для неудачной попытки
+    function errorCallback(error) {
+        if(error.code == 1) {
+            result.innerHTML = "Вы решили не делиться своей позицией, но все в порядке. Мы не будем спрашивать вас снова.";
+        } else if(error.code == 2) {
+            result.innerHTML = "Сеть не работает или услуга определения местоположения недоступна.";
+        } else if(error.code == 3) {
+            result.innerHTML = "Время ожидания до получения данных о местоположении истекло.";
+        } else {
+            result.innerHTML = "Определение геолокации не удалось из-за неизвестной ошибки.";
+        }
+    }
+</script>
+</head>
+<body>
+<form class="login_form" method="post">
+            <p>
+            {{ form.email.label }}<br>
+            {{ form.email(class="form-control", type="email") }}<br>
+            {% for error in form.email.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.password.label }}<br>
+            {{ form.password(class="form-control", type="password") }}<br>
+            {% for error in form.password.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </p>
+            <p>
+            {{ form.password_again.label }}<br>
+            {{ form.password_again(class="form-control", type="password") }}<br>
+            {% for error in form.password_again.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </p>
+            <p>
+            {{ form.name.label }}<br>
+            {{ form.name(class="form-control", type="name") }}<br>
+            {% for error in form.name.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </p>
+                <p>
+            {{ form.location.label }}<br>
+            {{ form.location(class="form-control", type="location", id="result") }}<br>
+            {% for error in form.location.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </p>
+    <p>{{ form.movie }} {{ form.movie.label }}</p>
+    <p>{{ form.sport }} {{ form.sport.label }}</p>
+        <p>{{ form.turizm }} {{ form.turizm.label }}</p>
+        <p>{{ form.book }} {{ form.book.label }}</p>
+        <p>{{ form.music }} {{ form.music.label }}</p>
+        <p>{{ form.kitchen }} {{ form.kitchen.label }}</p>
+        <p>{{ form.picture }} {{ form.picture.label }}</p>
+    <button type="button" onclick="showPosition();">Показать гео-позицию</button>
+    <button type="submit" >Зарегистрироваться</button>
 </form>
-{% endblock %}
+</body>
+</html>
