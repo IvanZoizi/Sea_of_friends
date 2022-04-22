@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+</head>
+<body>
+<link rel="stylesheet" href="/static/css/group.css" type="text/css">
+<main role="main" class="container">
+    <div>
+        <h2> Название - {{communities.name}}</h2>
+        <h3> Лидер - {{communities.user.name}}</h3>
+        <h3> Описание - {{communities.description}} </h3>
+        <h3> Увлечения группы {{communities.interes}} </h3>
+        <div>
+            {% if not collabarators%}
+            <form method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <a class="btn btn-success" href="/join/{{user.id}}">Вступить</a>
+                </div>
+            </form>
+            {% elif collabarators and not admin %}
+            <form method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <a class="btn btn-success" href="/leave/{{user.id}}">Выйти</a>
+                </div>
+            </form>
+            {% endif %}
+            {% if admin %}
+            <form method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <a class="btn btn-success" href="/add/post/{{communities.id}}">Создать пост</a>
+                    <a class="btn btn-success" href="/delete/communities/{{communities.id}}">Удалить группу</a>
+                </div>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+    <hr>
+    <p></p>
+    <div>
+        {% if collabarators %}
+        <h4>Посты</h4>
+            {% for event in posted %}
+            <div class="ques">
+                <h4> Создатель - {{event.user.name}}</h4>
+                <h4> Объявление: {{event.content}}</h4>
+            </div>
+                {% if admin %}
+            <p>
+                <a class="btn btn-success" href="/delete/post/1/{{event.id}}">Удалить</a>
+            </p>
+                {% endif %}
+                {% if current_user.id %}
+                    <a class="btn btn-success" href="/comment/post/{{event.id}}">Оставить комментарий</a>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+        <h1> Вы не являетесь членом группы </h1>
+        {% endif %}
+    </div>
+</main>
+</body>
+</html>

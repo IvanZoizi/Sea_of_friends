@@ -12,9 +12,12 @@ class Communities(SqlAlchemyBase, SerializerMixin):
 
     id = sqlalchemy.Column(sqlalchemy.Integer,
                            primary_key=True, autoincrement=True)
+    name = sqlalchemy.Column(sqlalchemy.String)
     creater = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey('users.id'))
+    description = sqlalchemy.Column(sqlalchemy.String)
     collaborators = sqlalchemy.Column(sqlalchemy.String)
     posts = sqlalchemy.Column(sqlalchemy.String)
     interes = sqlalchemy.Column(sqlalchemy.String)
+    city = sqlalchemy.Column(sqlalchemy.String)
 
     user = orm.relation('User')

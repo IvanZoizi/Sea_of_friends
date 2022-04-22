@@ -5,5 +5,4 @@ from wtforms.validators import DataRequired
 
 class PostForm(FlaskForm):
     content = StringField("Содержание сообщения", validators=[DataRequired()])
-    private = BooleanField('Приватное')
-    submit = SubmitField('Войти')
+    submit = SubmitField('Создать')

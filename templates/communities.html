@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+</head>
+<body>
+<main role="main" class="container">
+    <header>
+        <nav class="navbar navbar-light bg-Success">
+            {% if current_user.is_authenticated %}
+            <a class="navbar-brand" href="/cap/{{current_user.id}}">{{ current_user.surname }} {{ current_user.name }}</a>
+            {% else %}
+            <p>
+                <a href="/login">Войти/Зарегистрироваться</a>
+            </p>
+            {% endif %}
+        </nav>
+    </header>
+</main>
+<link rel="stylesheet" href="/static/css/group.css" type="text/css">
+<main role="main" class="container">
+    <h2 align="center">Группы</h2>
+    {% for event in lis %}
+    <div class="ques">
+        <div></div>
+        <h4>Названия - {{event.name}}</h4>
+        <h4>Описание - {{event.description}}</h4>
+        <h4>Город - {{event.city}}</h4>
+        <h4>Админ группы {{event.user.name}}</h4>
+    </div>
+    {% if current_user.id %}
+    <a class="btn btn-success" href="/communities/{{event.user.id}}">Профиль группу</a>
+    {% endif %}
+    <hr>
+    <div></div>
+    {% endfor %}
+</main>
+<hr>
+<div class="command">
+    {% if current_user.id %}
+    <p>
+        <a class="btn btn-success" href="/add/communities">Создать группу</a>
+    </p>
+    {% endif %}
+</div>
+</body>
+</html>
