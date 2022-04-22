@@ -3,46 +3,73 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@200&display=swap" rel="stylesheet">
 </head>
 <body>
 <main role="main" class="container">
-    <header>
-        <nav class="navbar navbar-light bg-Success">
-            {% if current_user.is_authenticated %}
-            <a class="navbar-brand" href="/cap/{{current_user.id}}">{{ current_user.surname }} {{ current_user.name }}</a>
-            {% else %}
-            <p>
-                <a href="/login">Войти/Зарегистрироваться</a>
-            </p>
-            {% endif %}
-        </nav>
+    <header class="header-main-page">
+        <img src="{{ url_for('static', filename='icons/goggles.png') }}" alt="лого" class="logo">
+        <h1 class="brend">Sea of friends</h1>
+        {% if current_user.id %}
+            <a class='reg' href="/logout">{{current_user.name}}</a>
+        {% else %}
+            <a class='reg' href="/login">Войти/Зарегистрироваться</a>
+        {% endif %}
     </header>
+    <nav>
+        <ul class="main_page_nav">
+            <li><a href="/" >ГЛАВНАЯ</a></li>
+            <li><a href="/seach/friend">ПОИСК РЯДОМ</a></li>
+            <li><a href="/communities">СООБЩЕСТВА</a></li>
+        </ul>
+    </nav>
 </main>
 <link rel="stylesheet" href="/static/css/group.css" type="text/css">
 <main role="main" class="container">
-    <h2 align="center">Группы</h2>
-    {% for event in lis %}
-    <div class="ques">
-        <div></div>
-        <h4>Названия - {{event.name}}</h4>
-        <h4>Описание - {{event.description}}</h4>
-        <h4>Город - {{event.city}}</h4>
-        <h4>Админ группы {{event.user.name}}</h4>
+    <h2 style="text-align: center; font-family: 'Roboto Mono'; color: white;">Группы</h2>
+    <div class="command">
+        {% if current_user.id %}
+        <p style='text-align: center;'>
+            <a style="text-decoration: none;text-align: center; font-family: 'Roboto Mono'; color: white;" href="/add/communities">Создать группу</a>
+        </p>
+        {% endif %}
     </div>
-    {% if current_user.id %}
-    <a class="btn btn-success" href="/communities/{{event.id}}">Профиль группу</a>
-    {% endif %}
-    <hr>
-    <div></div>
+    {% for event in lis %}
+    <div class="community_grid">
+        <p style="background: #173753; padding: 1rem; border-radius:10px; font-family: Roboto Mono; color: white">{{event.name}}<br>{{event.description}}<br>
+            {{event.city}}<br>
+            Админ - {{event.user.name}}<br>{% if current_user.id %}
+            <a style='color: #2892D7; font-family: "Roboto Mono"; text-decoration: none;' href="/communities/{{event.id}}">Профиль группы</a>
+            {% endif %}</p>
+    </div>
     {% endfor %}
 </main>
-<hr>
-<div class="command">
-    {% if current_user.id %}
-    <p>
-        <a class="btn btn-success" href="/add/communities">Создать группу</a>
-    </p>
-    {% endif %}
-</div>
+<footer class="footer_all">
+    <ul class="main_footer">
+        <li>
+            <a href="https://github.com/maitalins">
+                Клушин Максим
+            </a>
+        </li>
+        <li>
+            <a href="https://github.com/IvanGromovZoizi">
+                Захаров Иван
+            </a>
+        </li>
+        <li>
+            <a href="https://github.com/maitalins/Sea_of_friend">
+                Репозиторий сайта
+            </a>
+        </li>
+        <li>
+            <a href="https://ru.freepik.com">
+                Изображение
+            </a>
+        </li>
+    </ul>
+</footer>
 </body>
 </html>

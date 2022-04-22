@@ -43,9 +43,7 @@ def load_user(user_id):
 
 def main():
     db_session.global_init('db/user.db')
-
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port)
+    app.run(host='127.0.0.1', port=5000)
 
 
 @app.route('/')
@@ -316,7 +314,7 @@ def add_post_private(id):
             post.group = id
             db_sess.add(post)
             db_sess.commit()
-            return redirect('/communities' + str(id))
+            return redirect('/communities/' + str(id))
         else:
             return render_template('add_post.html', messgae='Вы не являетесь создателем даннной группы', form=form)
     return render_template('add_post.html', form=form)

@@ -2,6 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@200&display=swap" rel="stylesheet">
 <title>Обработка ошибок геолокации</title>
 <script>
     // Set up global variable
@@ -43,45 +47,88 @@
     }
 </script>
 </head>
+<header class="header-main-page">
+    <img src="{{ url_for('static', filename='icons/goggles.png') }}" alt="лого" class="logo">
+    <h1 class="brend">Sea of friends</h1>
+    {% if current_user.id %}
+        <a class='reg' href="/logout">{{current_user.name}}</a>
+    {% else %}
+        <a class='reg' href="/login">Войти/Зарегистрироваться</a>
+    {% endif %}
+</header>
+<nav>
+    <ul class="main_page_nav">
+        <li><a href="/">ГЛАВНАЯ</a></li>
+            <li><a href="/seach/friend">ПОИСК РЯДОМ</a></li>
+            <li><a href="/communities">СООБЩЕСТВА</a></li>
+    </ul>
+</nav>
 <body>
-    <form action="" method="post">
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.name.label }}<br>
-            {{ form.name(class="form-control", type="namel") }}<br>
-            {% for error in form.name.errors %}
-                <div class="alert alert-danger" role="alert">
-                    {{ error }}
-                </div>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.interes.label }}<br>
-            {{ form.interes(class="form-control", type="interes") }}<br>
-            {% for error in form.interes.errors %}
-                <div class="alert alert-danger" role="alert">
-                    {{ error }}
-                </div>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.location.label }}<br>
-            {{ form.location(class="form-control", type="location") }}<br>
-            {% for error in form.location.errors %}
-                <div class="alert alert-danger" role="alert">
-                    {{ error }}
-                </div>
-            {% endfor %}
-        </p>
-        <p>{{ form.movie }} {{ form.movie.label }}</p>
-        <p>{{ form.sport }} {{ form.sport.label }}</p>
-        <p>{{ form.turizm }} {{ form.turizm.label }}</p>
-        <p>{{ form.book }} {{ form.book.label }}</p>
-        <p>{{ form.music }} {{ form.music.label }}</p>
-        <p>{{ form.kitchen }} {{ form.kitchen.label }}</p>
-        <p>{{ form.picture }} {{ form.picture.label }}</p>
-        <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
-        <div>{{ message }}</div>
-    </form>
+    <main class="login_page">
+        <div class="inp_form">
+            <form aclass='login_form' method="post">
+                {{ form.hidden_tag() }}
+                <p>
+                    {{ form.name.label }}<br>
+                    {{ form.name(class="form-control", type="namel") }}<br>
+                    {% for error in form.name.errors %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ error }}
+                        </div>
+                    {% endfor %}
+                </p>
+                <p>
+                    {{ form.interes.label }}<br>
+                    {{ form.interes(class="form-control", type="interes") }}<br>
+                    {% for error in form.interes.errors %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ error }}
+                        </div>
+                    {% endfor %}
+                </p>
+                <p>
+                    {{ form.location.label }}<br>
+                    {{ form.location(class="form-control", type="location") }}<br>
+                    {% for error in form.location.errors %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ error }}
+                        </div>
+                    {% endfor %}
+                </p>
+                <p>{{ form.movie }} {{ form.movie.label }}</p>
+                <p>{{ form.sport }} {{ form.sport.label }}</p>
+                <p>{{ form.turizm }} {{ form.turizm.label }}</p>
+                <p>{{ form.book }} {{ form.book.label }}</p>
+                <p>{{ form.music }} {{ form.music.label }}</p>
+                <p>{{ form.kitchen }} {{ form.kitchen.label }}</p>
+                <p>{{ form.picture }} {{ form.picture.label }}</p>
+                <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+                <div>{{ message }}</div>
+            </form>
+        </div>
+        <footer class="footer_all">
+            <ul class="main_footer">
+                <li>
+                    <a href="https://github.com/maitalins">
+                        Клушин Максим
+                    </a>
+                </li>
+                <li>
+                    <a href="https://github.com/IvanGromovZoizi">
+                        Захаров Иван
+                    </a>
+                </li>
+                <li>
+                    <a href="https://github.com/maitalins/Sea_of_friend">
+                        Репозиторий сайта
+                    </a>
+                </li>
+                <li>
+                    <a href="https://ru.freepik.com">
+                        Изображение
+                    </a>
+                </li>
+            </ul>
+        </footer>
 </body>
 </html>

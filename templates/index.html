@@ -4,15 +4,20 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/style.css">
-    <title>main</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@200&display=swap" rel="stylesheet">
+    <title>Главная страница</title>
 </head>
 <body>
     <header class="header-main-page">
+        <img src="{{ url_for('static', filename='icons/goggles.png') }}" alt="лого" class="logo">
+        <h1 class="brend">Sea of friends</h1>
         {% if current_user.id %}
-        <a href="/logout">{{current_user.name}}</a>
+        <a class='reg' href="/logout">{{current_user.name}}</a>
         {% else %}
-        <a href="/login">Войти/Зарегистрироваться</a>
+        <a class='reg' href="/login">Войти/Зарегистрироваться</a>
         {% endif %}
     </header>
     <nav>
@@ -20,30 +25,41 @@
             <li><a href="/">ГЛАВНАЯ</a></li>
             <li><a href="/seach/friend">ПОИСК РЯДОМ</a></li>
             <li><a href="/communities">СООБЩЕСТВА</a></li>
-            <li><a href="/contact">КОНТАКТЫ</a></li>
         </ul>
     </nav>
-    <p>
-        {% if current_user.id %}
-            <a href="/add/post">Создать запрос</a>
-        {% endif %}
-    </p>
-    <main>
-        <section>
+    <main style="display: flex; align-items: center; padding-top: 20px;">
+        <section class="content">
             {% for i in message %}
                 <div>
                     <h1>{{i.user.name}}</h1>
                     <p>{{i.content}}</p>
-                    <p>
-                        <a href="/add/comment/{{i.id}}">Оставить комментарии</a>
-                        {% if current_user.id == i.creater.id %}
-                            <a href="/delete/comment/{{i.id}}">Удалить комментарий</a>
-                        {% endif %}
-                    </p>
                 </div>
             {% endfor %}
         </section>
     </main>
-    <footer></footer>
+    <footer class="footer_all">
+        <ul class="main_footer">
+            <li>
+                <a href="https://github.com/maitalins">
+                    Клушин Максим
+                </a>
+            </li>
+            <li>
+                <a href="https://github.com/IvanGromovZoizi">
+                    Захаров Иван
+                </a>
+            </li>
+            <li>
+                <a href="https://github.com/maitalins/Sea_of_friend">
+                    Репозиторий сайта
+                </a>
+            </li>
+            <li>
+                <a href="https://ru.freepik.com">
+                    Изображение
+                </a>
+            </li>
+        </ul>
+    </footer>
 </body>
 </html>

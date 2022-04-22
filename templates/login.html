@@ -1,73 +1,129 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<title>Обработка ошибок геолокации</title>
-<script>
-    // Set up global variable
-    var result;
-    const fs = require("fs");
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@200&display=swap" rel="stylesheet">
+    <title>main</title>
+    <script>
+        // Set up global variable
+        var result;
+        const fs = require("fs");
 
-    function showPosition() {
-        // Элемент в который выводим результат функции
-        result = document.getElementById("result");
+        function showPosition() {
+            // Элемент в который выводим результат функции
+            result = document.getElementById("result");
 
-        // Если геолокация доступна, пробуем получить позицию посетителя
-        if(navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
-        } else {
-            result.value = "Извините, ваш браузер не поддерживает геолокацию HTML5."
+            // Если геолокация доступна, пробуем получить позицию посетителя
+            if(navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+            } else {
+                result.value = "Извините, ваш браузер не поддерживает геолокацию HTML5."
+            }
+        };
+
+        // Определяем функцию обратного вызова для успешной попытки
+        function successCallback(position) {
+            result.value = position.coords.latitude + "," + position.coords.longitude;
+            fs.writeFileSync("hello.txt", result.innerHTML)
+            fs.close()
+
         }
-    };
-
-    // Определяем функцию обратного вызова для успешной попытки
-    function successCallback(position) {
-        result.value = position.coords.latitude + "," + position.coords.longitude;
-        fs.writeFileSync("hello.txt", result.innerHTML)
-        fs.close()
-
-    }
 
 
-    // Определяем функцию обратного вызова для неудачной попытки
-    function errorCallback(error) {
-        if(error.code == 1) {
-            result.innerHTML = "Вы решили не делиться своей позицией, но все в порядке. Мы не будем спрашивать вас снова.";
-        } else if(error.code == 2) {
-            result.innerHTML = "Сеть не работает или услуга определения местоположения недоступна.";
-        } else if(error.code == 3) {
-            result.innerHTML = "Время ожидания до получения данных о местоположении истекло.";
-        } else {
-            result.innerHTML = "Определение геолокации не удалось из-за неизвестной ошибки.";
+        // Определяем функцию обратного вызова для неудачной попытки
+        function errorCallback(error) {
+            if(error.code == 1) {
+                result.innerHTML = "Вы решили не делиться своей позицией, но все в порядке. Мы не будем спрашивать вас снова.";
+            } else if(error.code == 2) {
+                result.innerHTML = "Сеть не работает или услуга определения местоположения недоступна.";
+            } else if(error.code == 3) {
+                result.innerHTML = "Время ожидания до получения данных о местоположении истекло.";
+            } else {
+                result.innerHTML = "Определение геолокации не удалось из-за неизвестной ошибки.";
+            }
         }
-    }
-</script>
+    </script>
 </head>
 <body>
-    <form action="" method="post">
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.email.label }}<br>
-            {{ form.email(class="form-control", type="email") }}<br>
-            {% for error in form.email.errors %}
-                <div class="alert alert-danger" role="alert">
-                    {{ error }}
+    <header class="header-main-page">
+        <img src="{{ url_for('static', filename='icons/goggles.png') }}" alt="лого" class="logo">
+        <h1 class="brend">Sea of friends</h1>
+        {% if current_user.id %}
+            <a class='reg' href="/logout">{{current_user.name}}</a>
+        {% else %}
+            <a class='reg' href="/login">Войти/Зарегистрироваться</a>
+        {% endif %}
+    </header>
+    <nav>
+        <ul class="main_page_nav">
+            <li><a href="/">ГЛАВНАЯ</a></li>
+            <li><a href="/seach/friend">ПОИСК РЯДОМ</a></li>
+            <li><a href="/communities">СООБЩЕСТВА</a></li>
+        </ul>
+    </nav>
+<main class="login_page">
+    <div  class="inp_form">
+        <form action="" method="post">
+            {{ form.hidden_tag() }}
+                <p style="padding-top: 10px">
+                {{ form.email.label }}
+                </p>
+                <div>
+                    {{ form.email(type="email") }}
                 </div>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.password.label }}<br>
-            {{ form.password(class="form-control", type="password") }}<br>
-            {% for error in form.password.errors %}
-                <div class="alert alert-danger" role="alert">
-                    {{ error }}
+                {% for error in form.email.errors %}
+                    <div style="color: white;" role="alert">
+                        {{ error }}
+                    </div>
+                {% endfor %}
+            <p>
+                <p>
+                    {{ form.password.label }}
+                </p>
+                <div>
+                    {{ form.password(type="password") }}
                 </div>
-            {% endfor %}
-        </p>
-        <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
-        <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
-        <div>{{ message }}</div>
-    </form>
-<a href="/register">Зарегистрироваться</a>
+                {% for error in form.password.errors %}
+                    <div>
+                        {{ error }}
+                    </div>
+                {% endfor %}
+            </p>
+            <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
+            <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+            <div>{{ message }}</div>
+            <a style="text-decoration: none; font-family: 'Roboto Mono'; color: white;" href="/register">Зарегистрироваться</a>
+        </form>
+    </div>
+</main>
+<footer class="footer_all">
+    <ul class="main_footer">
+        <li>
+            <a href="https://github.com/maitalins">
+                Клушин Максим
+            </a>
+        </li>
+        <li>
+            <a href="https://github.com/IvanGromovZoizi">
+                Захаров Иван
+            </a>
+        </li>
+        <li>
+            <a href="https://github.com/maitalins/Sea_of_friend">
+                Репозиторий сайта
+            </a>
+        </li>
+        <li>
+            <a href="https://ru.freepik.com">
+                Изображение
+            </a>
+        </li>
+    </ul>
+</footer>
 </body>
 </html>

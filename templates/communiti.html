@@ -3,62 +3,99 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@200&display=swap" rel="stylesheet">
 </head>
 <body>
+    <header class="header-main-page">
+        <img src="{{ url_for('static', filename='icons/goggles.png') }}" alt="лого" class="logo">
+        <h1 class="brend">Sea of friends</h1>
+        {% if current_user.id %}
+            <a class='reg' href="/logout">{{current_user.name}}</a>
+        {% else %}
+            <a class='reg' href="/login">Войти/Зарегистрироваться</a>
+        {% endif %}
+    </header>
+    <nav>
+        <ul class="main_page_nav">
+            <li><a href="/">ГЛАВНАЯ</a></li>
+            <li><a href="/seach/friend">ПОИСК РЯДОМ</a></li>
+            <li><a href="/communities">СООБЩЕСТВА</a></li>
+        </ul>
+    </nav>
 <link rel="stylesheet" href="/static/css/group.css" type="text/css">
 <main role="main" class="container">
     <div>
-        <h2> Название - {{communities.name}}</h2>
-        <h3> Лидер - {{communities.user.name}}</h3>
-        <h3> Описание - {{communities.description}} </h3>
-        <h3> Увлечения группы {{communities.interes}} </h3>
-        <div>
+        <div class="community_grid">
+            <p style="background: #173753; padding: 1rem; border-radius:10px; font-family: Roboto Mono; color: white">{{communities.name}}<br>
+            Админ - {{communities.user.name}}<br>
+            {{communities.description}}<br>
+            {{communities.interes}}<br>
             {% if not collabarators%}
             <form method="post" enctype="multipart/form-data">
-                <div class="form-group">
-                    <a class="btn btn-success" href="/join/{{communities.id}}">Вступить</a>
-                </div>
+                <a style='color: #2892D7; font-family: "Roboto Mono"; text-decoration: none;' href="/join/{{communities.id}}">Вступить</a>
             </form>
             {% elif collabarators and not admin %}
             <form method="post" enctype="multipart/form-data">
-                <div class="form-group">
-                    <a class="btn btn-success" href="/leave/{{communities.id}}">Выйти</a>
-                </div>
+                <a style='color: #2892D7; font-family: "Roboto Mono"; text-decoration: none;' href="/leave/{{communities.id}}">Выйти</a>
             </form>
             {% endif %}
             {% if admin %}
             <form method="post" enctype="multipart/form-data">
-                <div class="form-group">
-                    <a class="btn btn-success" href="/add/post/{{communities.id}}">Создать пост</a>
-                    <a class="btn btn-success" href="/delete/communities/{{communities.id}}">Удалить группу</a>
-                </div>
+                <a style='color: #2892D7; font-family: "Roboto Mono"; text-decoration: none;' href="/add/post/{{communities.id}}">Создать пост</a>
+                <a style='color: #2892D7; font-family: "Roboto Mono"; text-decoration: none;' href="/delete/communities/{{communities.id}}">Удалить группу</a>
             </form>
+            </p>
             {% endif %}
         </div>
     </div>
-    <hr>
-    <p></p>
     <div>
         {% if collabarators %}
-        <h4>Посты</h4>
+        <h1 style="color: white; font-family: 'Roboto Mono'; text-align: center;">Посты</h1>
             {% for event in posted %}
-            <div class="ques">
-                <h4> Создатель - {{event.user.name}}</h4>
-                <h4> Объявление: {{event.content}}</h4>
-            </div>
+            <div class="community_grid">
+                <p style="background: #173753; padding: 1rem; border-radius:10px; font-family: Roboto Mono; color: white">{{event.user.name}}<br>
+                {{event.content}}<br>
                 {% if admin %}
-            <p>
-                <a class="btn btn-success" href="/delete/post/1/{{event.id}}">Удалить</a>
-            </p>
-                {% endif %}
-                {% if current_user.id %}
-                    <a class="btn btn-success" href="/comment/post/{{event.id}}">Оставить комментарий</a>
-                {% endif %}
+                    <a style='color: #2892D7; font-family: "Roboto Mono"; text-decoration: none;' href="/delete/post/1/{{event.id}}">Удалить</a>
+                    {% endif %}
+                    {% if current_user.id %}
+                    <a style='color: #2892D7; font-family: "Roboto Mono"; text-decoration: none;' href="/comment/post/{{event.id}}">Оставить комментарий</a>
+                    {% endif %}
+                </p>
+            </div>
+
             {% endfor %}
         {% else %}
         <h1> Вы не являетесь членом группы </h1>
         {% endif %}
     </div>
 </main>
+<footer class="footer_all">
+    <ul class="main_footer">
+        <li>
+            <a href="https://github.com/maitalins">
+                Клушин Максим
+            </a>
+        </li>
+        <li>
+            <a href="https://github.com/IvanGromovZoizi">
+                Захаров Иван
+            </a>
+        </li>
+        <li>
+            <a href="https://github.com/maitalins/Sea_of_friend">
+                Репозиторий сайта
+            </a>
+        </li>
+        <li>
+            <a href="https://ru.freepik.com">
+                Изображение
+            </a>
+        </li>
+    </ul>
+</footer>
 </body>
 </html>
