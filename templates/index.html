@@ -23,12 +23,23 @@
             <li><a href="/contact">КОНТАКТЫ</a></li>
         </ul>
     </nav>
+    <p>
+        {% if current_user.id %}
+            <a href="/add/post">Создать запрос</a>
+        {% endif %}
+    </p>
     <main>
         <section>
             {% for i in message %}
                 <div>
-                    <h1>{{i.creater.name}}</h1>
+                    <h1>{{i.user.name}}</h1>
                     <p>{{i.content}}</p>
+                    <p>
+                        <a href="/add/comment/{{i.id}}">Оставить комментарии</a>
+                        {% if current_user.id == i.creater.id %}
+                            <a href="/delete/comment/{{i.id}}">Удалить комментарий</a>
+                        {% endif %}
+                    </p>
                 </div>
             {% endfor %}
         </section>

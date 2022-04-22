@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Обработка ошибок геолокации</title>
+</head>
+<body>
+<main>
+    <div>
+    <h2>Профиль {{user.name}}</h2>
+        {% if interes %}
+            <h4> Увлечения пользователя {{interes}}</h4>
+        {% else %}
+            <h4> Пользователь еще не определился</h4>
+        {% endif %}
+        {% if groups %}
+            <h4> Группы пользователя {{groups}}</h4>
+        {% else %}
+            <h4> Пользователь нигде не состоит</h4>
+        {% endif %}
+        {% if user.telegram %}
+        <h4> Телеграмм пользователя - {{user.telegram}} </h4>
+        {% else %}
+        <h4> К сожалению, пользователь не захотел делиться аккаунтом в Телеграмме</h4>
+        {% endif %}
+    </div>
+    <div>
+        {% if posted %}
+            <h4>Посты пользователя</h4>
+        {% for i in posted %}
+        <div>
+            <p>{{i.content}}</p>
+            <p>
+                <a href="/add/comment/{{i.id}}">Оставить комментарии</a>
+                {% if current_user.id == i.creater.id %}
+                <a href="/delete/comment/{{i.id}}">Удалить комментарий</a>
+                {% endif %}
+            </p>
+        </div>
+        {% endfor %}
+        {% else %}
+            <h4>Пользователь еще ничего не публиковал</h4>
+        {% endif %}
+    </div>
+</main>
+</body>
+</html>

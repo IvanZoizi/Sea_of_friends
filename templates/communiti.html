@@ -16,13 +16,13 @@
             {% if not collabarators%}
             <form method="post" enctype="multipart/form-data">
                 <div class="form-group">
-                    <a class="btn btn-success" href="/join/{{user.id}}">Вступить</a>
+                    <a class="btn btn-success" href="/join/{{communities.id}}">Вступить</a>
                 </div>
             </form>
             {% elif collabarators and not admin %}
             <form method="post" enctype="multipart/form-data">
                 <div class="form-group">
-                    <a class="btn btn-success" href="/leave/{{user.id}}">Выйти</a>
+                    <a class="btn btn-success" href="/leave/{{communities.id}}">Выйти</a>
                 </div>
             </form>
             {% endif %}

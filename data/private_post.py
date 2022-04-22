@@ -11,5 +11,7 @@ class PrivatePost(SqlAlchemyBase, SerializerMixin):
                            primary_key=True, autoincrement=True)
     creater = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("users.id"))
     content = sqlalchemy.Column(sqlalchemy.String)
+    group = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey('communities.id'))
 
     user = orm.relation('User')
+    communities = orm.relation('Communities')

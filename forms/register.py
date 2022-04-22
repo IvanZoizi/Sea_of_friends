@@ -8,6 +8,7 @@ class RegisterForm(FlaskForm):
     email = EmailField("Почта", validators=[DataRequired()])
     password = PasswordField('Пароль', validators=[DataRequired()])
     password_again = PasswordField("Повторите пароль", validators=[DataRequired()])
+    telegram = StringField("Ссылка на ваш телеграмм")
     movie = BooleanField("Фильмы, сериалы")
     sport = BooleanField('Спорт')
     turizm = BooleanField("Туризм")

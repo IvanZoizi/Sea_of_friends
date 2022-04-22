@@ -15,9 +15,10 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     name = sqlalchemy.Column(sqlalchemy.String)
     email = sqlalchemy.Column(sqlalchemy.String, unique=True)
     hashed_password = sqlalchemy.Column(sqlalchemy.String)
-    location = sqlalchemy.Column(sqlalchemy.String)
-    interests = sqlalchemy.Column(sqlalchemy.String)
-    groups = sqlalchemy.Column(sqlalchemy.String)
+    location = sqlalchemy.Column(sqlalchemy.String, default='')
+    interests = sqlalchemy.Column(sqlalchemy.String, default='')
+    groups = sqlalchemy.Column(sqlalchemy.String, default='')
+    telegram = sqlalchemy.Column(sqlalchemy.String)
 
     def set_password(self, password):
         self.hashed_password = generate_password_hash(password)

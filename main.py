@@ -5,10 +5,10 @@ from flask_login import LoginManager, login_user, current_user, login_required, 
 
 import os
 import json
-import random
-import folium
-import string
 
+from data.comments import Comments
+from data.private_comments import PrivateComments
+from forms.comments import CommentForm
 from data import db_session
 from forms.register import RegisterForm
 from forms.login import LoginForm
@@ -64,6 +64,7 @@ def register():
         user.name = form.name.data
         user.email = form.email.data
         user.hashed_password = user.set_password(form.password.data)
+        user.telegram = form.telegram.data
         if form.location.data:
             user.location = form.location.data
         else:
@@ -122,13 +123,14 @@ def authokey(email):
         user.hashed_password = reg_user.hashed_password
         user.location = reg_user.location
         user.interests = reg_user.interests
+        user.telegram = reg_user.telegram
         db_sess.add(user)
         db_sess.commit()
     return redirect('/')
 
 
 @login_required
-@app.route('/add/post')
+@app.route('/add/post', methods=["GET", "POST"])
 def add_post():
     db_sess = db_session.create_session()
     form = PostForm()
@@ -138,8 +140,8 @@ def add_post():
         post.content = form.content.data
         db_sess.add(post)
         db_sess.commit()
-        return render_template('/')
-    return render_template('')
+        return redirect('/')
+    return render_template('add_post.html', form=form, current_user=current_user)
 
 
 @app.route('/add/communities', methods=['GET', "POST"])
@@ -173,9 +175,16 @@ def add_communities():
         if form.turizm.data:
             interes.append("Туризм")
         group.interests = ';'.join(interes)
+        user = db_sess.query(User).filter(User.id == current_user.id).first()
+        lis = user.groups.split(';|;')
+        if lis[0] != '':
+            lis.append(group.name)
+        else:
+            lis[0] = group.name
+        user.groups = ';|;'.join(lis)
         db_sess.add(group)
         db_sess.commit()
-        return redirect('/')
+        return redirect('/communities')
     return render_template('add_communitie.html', form=form)
 
 
@@ -185,6 +194,19 @@ def delete_communities(id):
     db_sess = db_session.create_session()
     group = db_sess.query(Communities).filter(Communities.id == id).first()
     if current_user.id == group.creater:
+        posts = db_sess.query(PrivatePost).filter(PrivatePost.creater == current_user.id).all()
+        coms = db_sess.query(PrivateComments).filter(PrivateComments.creater == current_user.id).all()
+        for i in zip(posts, coms):
+            try:
+                db_sess.delete(i[0])
+            except Exception:
+                pass
+            try:
+                db_sess.delete(i[1])
+            except Exception:
+                pass
+        db_sess.delete(posts)
+        db_sess.delete(coms)
         db_sess.delete(group)
         db_sess.commit()
     return redirect('/communities')
@@ -200,11 +222,17 @@ def communities():
     return render_template('communities.html', lis=communities, current_user=current_user)
 
 
-@app.route('/personal/account/<int:id>')
+@app.route('/person/account/<int:id>')
 def personal_account(id):
     db_sess = db_session.create_session()
     user = db_sess.query(User).filter(User.id == id).first()
-    return render_template('', user=user)
+    posted = db_sess.query(PublicPost).filter(PublicPost.creater == id).all()
+    interes = ', '.join(user.interests.split(';'))
+    print(user.groups.split(';|;'))
+    groups = ', '.join([i for i in user.groups.split(';|;') if i != ''])
+    print(groups)
+    return render_template('user.html', user=user, posted=posted, current_user=current_user, interes=interes,
+                           groups=groups)
 
 
 @app.route('/seach/friend', methods=['GET', 'POST'])
@@ -249,20 +277,24 @@ def delete_post(state, id):
         post = db_sess.query(PublicPost).filter(PublicPost.id == id).filter(
             PublicPost.creater == current_user.id).first()
     if post:
+        coms = db_sess.query(PrivateComments).filter(PrivateComments.private_post == id).all()
+        for i in coms:
+            db_sess.delete(i)
         db_sess.delete(post)
         db_sess.commit()
-    return redirect('/communities')
+    return redirect('/communities/' + str(id))
 
 
 @app.route('/communities/<int:id>')
 def communities_one(id):
     db_sess = db_session.create_session()
     communities = db_sess.query(Communities).filter(Communities.id == id).first()
-    posted = db_sess.query(PrivatePost).filter(PrivatePost.id == id).all()
+    if not communities:
+        return redirect('/communities')
+    posted = db_sess.query(PrivatePost).filter(PrivatePost.group == id).all()
     if current_user.is_authenticated:
         admin = True if communities.creater == current_user.id else False
         collabarators = True if str(current_user.id) in communities.collaborators else False
-        print(admin, collabarators)
     else:
         admin = False
         collabarators = False
@@ -281,12 +313,75 @@ def add_post_private(id):
             post = PrivatePost()
             post.creater = current_user.id
             post.content = form.content.data
+            post.group = id
             db_sess.add(post)
             db_sess.commit()
-            return redirect('/communities')
+            return redirect('/communities' + str(id))
         else:
             return render_template('add_post.html', messgae='Вы не являетесь создателем даннной группы', form=form)
     return render_template('add_post.html', form=form)
+
+
+@app.route("/add/comment/<int:id>", methods=['GET', 'POST'])
+@login_required
+def add_comments(id):
+    db_sess = db_session.create_session()
+    form = CommentForm()
+    if form.validate_on_submit():
+        com = Comments()
+        com.creater = current_user.id
+        com.content = form.name.data
+        com.post = id
+        db_sess.add(com)
+        db_sess.commit()
+        return redirect('/add/comment/' + str(id))
+    coms = db_sess.query(Comments).filter(Comments.post == id).all()
+    return render_template('add_comments.html', form=form, current_user=current_user, com=coms)
+
+
+@app.route('/comment/post/<int:id>', methods=["GET", "POST"])
+@login_required
+def add_comments_private(id):
+    db_sess = db_session.create_session()
+    form = CommentForm()
+    if form.validate_on_submit():
+        com = PrivateComments()
+        com.creater = current_user.id
+        com.content = form.name.data
+        com.private_post = id
+        db_sess.add(com)
+        db_sess.commit()
+        return redirect('/comment/post/' + str(id))
+    coms = db_sess.query(PrivateComments).filter(PrivateComments.private_post == id).all()
+    return render_template('add_comments.html', form=form, current_user=current_user, com=coms)
+
+
+@app.route('/join/<int:id>')
+@login_required
+def join_communite(id):
+    db_sess = db_session.create_session()
+    com = db_sess.query(Communities).filter(Communities.id == id).first()
+    lis = com.collaborators.split('|')
+    lis.append(str(current_user.id))
+    com.collaborators = '|'.join(lis)
+    user = db_sess.query(User).filter(User.id == current_user.id).first()
+    lis = user.groups.split(';|;')
+    lis.append(com.name)
+    user.groups = ';|;'.join(lis)
+    db_sess.commit()
+    return redirect('/communities/' + str(id))
+
+
+@app.route('/leave/<int:id>')
+@login_required
+def leave_com(id):
+    db_sess = db_session.create_session()
+    com = db_sess.query(Communities).filter(Communities.id == id).first()
+    lis = com.collaborators.split('|')
+    lis.remove(str(current_user.id))
+    com.collaborators = '|'.join(lis)
+    db_sess.commit()
+    return redirect('/communities/' + str(id))
 
 
 if __name__ == '__main__':

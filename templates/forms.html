@@ -90,6 +90,15 @@
                 </div>
             {% endfor %}
         </p>
+        <p>
+            {{ form.telegram.label }}<br>
+            {{ form.telegram(class="form-control", type="telegram") }}<br>
+            {% for error in form.telegram.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </p>
     <p>{{ form.movie }} {{ form.movie.label }}</p>
     <p>{{ form.sport }} {{ form.sport.label }}</p>
         <p>{{ form.turizm }} {{ form.turizm.label }}</p>

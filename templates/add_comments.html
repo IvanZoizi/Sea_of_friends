@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Обработка ошибок геолокации</title>
+<script>
+    // Set up global variable
+    var result;
+    const fs = require("fs");
+
+    function showPosition() {
+        // Элемент в который выводим результат функции
+        result = document.getElementById("result");
+
+        // Если геолокация доступна, пробуем получить позицию посетителя
+        if(navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+        } else {
+            result.value = "Извините, ваш браузер не поддерживает геолокацию HTML5."
+        }
+    };
+
+    // Определяем функцию обратного вызова для успешной попытки
+    function successCallback(position) {
+        result.value = position.coords.latitude + "," + position.coords.longitude;
+        fs.writeFileSync("hello.txt", result.innerHTML)
+        fs.close()
+
+    }
+
+
+    // Определяем функцию обратного вызова для неудачной попытки
+    function errorCallback(error) {
+        if(error.code == 1) {
+            result.innerHTML = "Вы решили не делиться своей позицией, но все в порядке. Мы не будем спрашивать вас снова.";
+        } else if(error.code == 2) {
+            result.innerHTML = "Сеть не работает или услуга определения местоположения недоступна.";
+        } else if(error.code == 3) {
+            result.innerHTML = "Время ожидания до получения данных о местоположении истекло.";
+        } else {
+            result.innerHTML = "Определение геолокации не удалось из-за неизвестной ошибки.";
+        }
+    }
+</script>
+</head>
+<body>
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.name.label }}<br>
+            {{ form.name(class="form-control", type="namel") }}<br>
+            {% for error in form.name.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+        <div>{{ message }}</div>
+    </form>
+<main>
+    <h2>Остальные комментарии</h2>
+    {% for i in com %}
+        <h4>{{i.user.name}}</h4>
+        <h4>{{i.content}}</h4>
+    {% endfor %}
+</main>
+</body>
+</html>
