@@ -71,6 +71,12 @@ def register():
             data = json.load(response)
             loc = ','.join(data['loc'].split(','))
             user.location = loc
+        try:
+            map(float, user.location.split(','))
+            if len(user.location.split(',')) != 2:
+                raise ValueError
+        except ValueError:
+            return render_template('forms.html', form=form, message='Напишите координаты, которые вы хотите')
         interes = []
         if form.music.data:
             interes.append('Музыка')

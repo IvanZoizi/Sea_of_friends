@@ -4,7 +4,7 @@ import os
 import math
 
 geocoder_api_server = "http://geocode-maps.yandex.ru/1.x/"
-API_KEY = "40d1649f-0493-4b70-98ba-98533de7710b"
+API_KEY = "a3d0f165-0f92-4a67-9405-1f5faf68da30"
 
 
 def geocode(adress):
@@ -100,6 +100,3 @@ def lonlat_distance(a, b):
     distance = math.sqrt(dx * dx + dy * dy)
 
     return distance
-
-
-print(geocode('43.146478, 51.554601'))
