@@ -43,7 +43,9 @@ def load_user(user_id):
 
 def main():
     db_session.global_init('db/user.db')
-    app.run(host='127.0.0.1', port=5000)
+
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
 
 
 @app.route('/')
@@ -159,7 +161,6 @@ def add_communities():
         group = Communities()
         group.creater = current_user.id
         group.name = form.name.data
-        group.interes = form.interes.data
         group.city = form.location.data
         group.description = form.interes.data
         group.collaborators = str(current_user.id)
@@ -178,7 +179,7 @@ def add_communities():
             interes.append("Фильма, сериалы")
         if form.turizm.data:
             interes.append("Туризм")
-        group.interests = ';'.join(interes)
+        group.interes = ';'.join(interes)
         user = db_sess.query(User).filter(User.id == current_user.id).first()
         lis = user.groups.split(';|;')
         if lis[0] != '':
