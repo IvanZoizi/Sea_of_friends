@@ -49,7 +49,7 @@ async def help(message: types.Message):
 
 @dp.message_handler(state=Register.interes, content_types=['text'])
 async def register_interes(message: types.Message, state: FSMContext):
-    await state.update_data(interes=';'.join(message.text.split(',')))
+    await state.update_data(interes=';'.join([i.strip().capitalize() for i in message.text.split(',')]))
     await Register.telegram.set()
     await message.answer("Можно показывать ваш Телеграм для общения с другими пользователями?")
 
@@ -83,14 +83,16 @@ async def coord_step(message: types.Message, state: FSMContext):
         await state.finish()
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.name == message.from_user.username).first()
+        flag = False
         if not user:
+            flag = True
             user = User()
         user.name = message.from_user.username
         user.interests = data['interes']
         if 'telegram' in data:
             user.telegram = data['telegram']
         user.location = lat_lon
-        if not user:
+        if flag:
             db_sess.add(user)
         db_sess.commit()
     except Exception as e:
@@ -131,11 +133,17 @@ async def nwe_coord_step(message: types.Message, state: FSMContext):
 async def seach(message: types.Message, state: FSMContext):
     db_sess = db_session.create_session()
     user = db_sess.query(User).filter(User.name == message.from_user.username).first()
-    users = db_sess.query(User).filter(User.name != message.from_user.username).filter(User.interests.like(f"%{user.interests}%")).all()[::20]
+    users_lis = []
+    for i in user.interests.split(';'):
+        users = db_sess.query(User).filter(User.name != message.from_user.username).filter(User.interests.like(f"%{i}%")).all()[::20]
+        users_lis += users
     lis = ['Зарегистрированные пользователи, с похожими увлечениями ', '']
-    for i in users:
+    for i in list(set(users_lis)):
         lis.append(f'{i.name} - {geocode(",".join(i.location.split(",")[::-1]))["metaDataProperty"]["GeocoderMetaData"]["text"]}')
-    await message.answer('\n'.join(lis))
+    if len(lis) > 2:
+        await message.answer('\n'.join(lis))
+    else:
+        await message.answer("Я ни смог никого найти")
 
 
 if __name__ == "__main__":
