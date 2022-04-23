@@ -110,6 +110,7 @@ async def new_loc(message: types.Message, state: FSMContext):
 @dp.message_handler(state=Loc.new_loc_state, content_types=['text', 'location'])
 async def nwe_coord_step(message: types.Message, state: FSMContext):
     await state.finish()
+    remove_buttons = types.ReplyKeyboardRemove()
     db_sess = db_session.create_session()
     user = db_sess.query(User).filter(User.name == message.from_user.username).first()
     if message.content_type == 'location':
@@ -122,9 +123,9 @@ async def nwe_coord_step(message: types.Message, state: FSMContext):
     if user:
         user.location = lat_lon
         db_sess.commit()
-        await message.answer("Все прошло успешно")
+        await message.answer("Все прошло успешно", reply_markup=remove_buttons)
     else:
-        await message.answer("Что-то пошло не так")
+        await message.answer("Что-то пошло не так", reply_markup=remove_buttons)
 
 
 @dp.message_handler(commands='seach')
