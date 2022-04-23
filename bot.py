@@ -43,7 +43,6 @@ async def start(message: types.Message, state):
 @dp.message_handler(commands='help')
 async def help(message: types.Message):
     await message.answer("Что я умею:\n"
-                         "/register - ввод нужной информации для поиска друзей\n"
                          "/newloc - обновление локации\n"
                          "/seach - поиск друзей")
 
