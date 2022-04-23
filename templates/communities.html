@@ -38,7 +38,7 @@
         {% endif %}
     </div>
     {% for event in lis %}
-    <div class="community_grid">
+    <div class="community_grid" style="margin-bottom: 10px;">
         <p style="background: #173753; padding: 1rem; border-radius:10px; font-family: Roboto Mono; color: white">{{event.name}}<br>{{event.description}}<br>
             {{event.city}}<br>
             Админ - {{event.user.name}}<br>{% if current_user.id %}

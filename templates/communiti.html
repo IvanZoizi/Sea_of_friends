@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@200&display=swap" rel="stylesheet">
+    <title>Sea of friends</title>
 </head>
 <body>
     <header class="header-main-page">
@@ -27,8 +28,8 @@
     </nav>
 <link rel="stylesheet" href="/static/css/group.css" type="text/css">
 <main role="main" class="container">
-    <div>
-        <div class="community_grid">
+    <div class="inp_form">
+        <div class="login_form">
             <p style="background: #173753; padding: 1rem; border-radius:10px; font-family: Roboto Mono; color: white">{{communities.name}}<br>
             Админ - {{communities.user.name}}<br>
             {{communities.description}}<br>
@@ -69,7 +70,7 @@
 
             {% endfor %}
         {% else %}
-        <h1> Вы не являетесь членом группы </h1>
+        <h1 style="text-align: center; font-family: 'Roboto Mono'; color: white;"> Вы не являетесь членом группы </h1>
         {% endif %}
     </div>
 </main>

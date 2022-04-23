@@ -6,7 +6,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@200&display=swap" rel="stylesheet">
-<title>Обработка ошибок геолокации</title>
+<title>Sea of friends</title>
 </head>
 <body>
     <header class="header-main-page">
@@ -25,20 +25,24 @@
             <li><a href="/communities">СООБЩЕСТВА</a></li>
         </ul>
     </nav>
-    <form action="" method="post">
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.content.label }}<br>
-            {{ form.content(type="content") }}<br>
-            {% for error in form.content.errors %}
-                <div class="alert alert-danger" role="alert">
-                    {{ error }}
-                </div>
-            {% endfor %}
-        </p>
-        <p>{{ form.submit(type="submit") }}</p>
-        <div>{{ message }}</div>
-    </form>
+<main class="login_page">
+    <div class="inp_form">
+        <form class="login_form" method="post">
+            {{ form.hidden_tag() }}
+            <p>
+                {{ form.content.label }}<br>
+                {{ form.content(type="content") }}<br>
+                {% for error in form.content.errors %}
+                    <div>
+                        {{ error }}
+                    </div>
+                {% endfor %}
+            </p>
+            <p>{{ form.submit(type="submit") }}</p>
+            <div>{{ message }}</div>
+        </form>
+    </div>
+</main>
     <footer class="footer_all">
         <ul class="main_footer">
             <li>

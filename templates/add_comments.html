@@ -2,6 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@200&display=swap" rel="stylesheet">
 <title>Обработка ошибок геолокации</title>
 <script>
     // Set up global variable
@@ -44,25 +48,46 @@
 </script>
 </head>
 <body>
-    <form action="" method="post">
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.name.label }}<br>
-            {{ form.name(class="form-control", type="namel") }}<br>
-            {% for error in form.name.errors %}
-                <div class="alert alert-danger" role="alert">
-                    {{ error }}
-                </div>
-            {% endfor %}
-        </p>
-        <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
-        <div>{{ message }}</div>
-    </form>
-<main>
-    <h2>Остальные комментарии</h2>
+    <header class="header-main-page">
+        <img src="{{ url_for('static', filename='icons/goggles.png') }}" alt="лого" class="logo">
+        <h1 class="brend">Sea of friends</h1>
+        {% if current_user.id %}
+            <a class='reg' href="/logout">{{current_user.name}}</a>
+        {% else %}
+            <a class='reg' href="/login">Войти/Зарегистрироваться</a>
+        {% endif %}
+    </header>
+    <nav>
+        <ul class="main_page_nav">
+            <li><a href="/">ГЛАВНАЯ</a></li>
+            <li><a href="/seach/friend">ПОИСК РЯДОМ</a></li>
+            <li><a href="/communities">СООБЩЕСТВА</a></li>
+        </ul>
+    </nav>
+<main class="login_page">
+    <div class="inp_form">
+        <form class="login_form" method="post">
+            {{ form.hidden_tag() }}
+            <p>
+                {{ form.name.label }}<br>
+                {{ form.name(type="namel") }}<br>
+                {% for error in form.name.errors %}
+                    <div>
+                        {{ error }}
+                    </div>
+                {% endfor %}
+            </p>
+            <p>{{ form.submit(type="submit") }}</p>
+            <div>{{ message }}</div>
+        </form>
+    </div>
+    <p style="text-align: center; font-family: 'Roboto Mono'; color: white;">Остальные комментарии</p>
     {% for i in com %}
-        <h4>{{i.user.name}}</h4>
-        <h4>{{i.content}}</h4>
+    <div class="community_grid">
+        <p style='background: #173753; padding: 1rem; border-radius:10px; font-family: Roboto Mono; color: white;'>
+            {{i.user.name}}<br>
+            {{i.content}}</p>
+    </div>
     {% endfor %}
 </main>
 </body>

@@ -2,46 +2,92 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Обработка ошибок геолокации</title>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@200&display=swap" rel="stylesheet">
+<title>Sea of friends</title>
 </head>
 <body>
-<main>
-    <div>
-    <h2>Профиль {{user.name}}</h2>
-        {% if interes %}
-            <h4> Увлечения пользователя {{interes}}</h4>
+    <header class="header-main-page">
+        <img src="{{ url_for('static', filename='icons/goggles.png') }}" alt="лого" class="logo">
+        <h1 class="brend">Sea of friends</h1>
+        {% if current_user.id %}
+            <a class='reg' href="/logout">{{current_user.name}}</a>
         {% else %}
-            <h4> Пользователь еще не определился</h4>
+            <a class='reg' href="/login">Войти/Зарегистрироваться</a>
         {% endif %}
-        {% if groups %}
-            <h4> Группы пользователя {{groups}}</h4>
-        {% else %}
-            <h4> Пользователь нигде не состоит</h4>
-        {% endif %}
-        {% if user.telegram %}
-        <h4> Телеграмм пользователя - {{user.telegram}} </h4>
-        {% else %}
-        <h4> К сожалению, пользователь не захотел делиться аккаунтом в Телеграмме</h4>
-        {% endif %}
+    </header>
+    <nav>
+        <ul class="main_page_nav">
+            <li><a href="/" >ГЛАВНАЯ</a></li>
+            <li><a href="/seach/friend">ПОИСК РЯДОМ</a></li>
+            <li><a href="/communities">СООБЩЕСТВА</a></li>
+        </ul>
+    </nav>
+<main class="login_page">
+    <h2 style="text-align: center; font-family: 'Roboto Mono'; color: white;">Профиль {{user.name}}</h2>
+    <div class="inp_form">
+        <div class="login_form">
+            {% if interes %}
+                <p> Увлечения пользователя {{interes}}<br>
+            {% else %}
+                Пользователь еще не определился<br>
+            {% endif %}
+            {% if groups %}
+                Группы пользователя {{groups}}<br>
+            {% else %}
+                Пользователь нигде не состоит</br>
+            {% endif %}
+            {% if user.telegram %}
+            Телеграмм пользователя - {{user.telegram}}
+            {% else %}
+            К сожалению, пользователь не захотел делиться аккаунтом в Телеграмме</p>
+            {% endif %}
+        </div>
     </div>
     <div>
         {% if posted %}
-            <h4>Посты пользователя</h4>
+            <h2 style="text-align: center; font-family: 'Roboto Mono'; color: white;">Посты пользователя</h2>
         {% for i in posted %}
-        <div>
-            <p>{{i.content}}</p>
-            <p>
-                <a href="/add/comment/{{i.id}}">Оставить комментарии</a>
+        <div class="community_grid">
+            <p style="background: #173753; padding: 1rem; border-radius:10px; font-family: Roboto Mono; color: white">
+                {{i.content}}<br>
+                <a style="text-decoration: none;text-align: center; font-family: 'Roboto Mono'; color: #2892D7;" href="/add/comment/{{i.id}}">Оставить комментарии</a>
                 {% if current_user.id == i.creater.id %}
-                <a href="/delete/comment/{{i.id}}">Удалить комментарий</a>
+                <a style="text-decoration: none;text-align: center; font-family: 'Roboto Mono'; color: #2892D7;" href="/delete/comment/{{i.id}}">Удалить комментарий</a>
                 {% endif %}
             </p>
         </div>
         {% endfor %}
         {% else %}
-            <h4>Пользователь еще ничего не публиковал</h4>
+            <h2 style="text-align: center; font-family: 'Roboto Mono'; color: white;">Пользователь еще ничего не публиковал</h2>
         {% endif %}
     </div>
 </main>
+<footer class="footer_all">
+    <ul class="main_footer">
+        <li>
+            <a href="https://github.com/maitalins">
+                Клушин Максим
+            </a>
+        </li>
+        <li>
+            <a href="https://github.com/IvanGromovZoizi">
+                Захаров Иван
+            </a>
+        </li>
+        <li>
+            <a href="https://github.com/maitalins/Sea_of_friend">
+                Репозиторий сайта
+            </a>
+        </li>
+        <li>
+            <a href="https://ru.freepik.com">
+                Изображение
+            </a>
+        </li>
+    </ul>
+</footer>
 </body>
 </html>

@@ -200,18 +200,11 @@ def delete_communities(id):
     group = db_sess.query(Communities).filter(Communities.id == id).first()
     if current_user.id == group.creater:
         posts = db_sess.query(PrivatePost).filter(PrivatePost.creater == current_user.id).all()
-        coms = db_sess.query(PrivateComments).filter(PrivateComments.creater == current_user.id).all()
-        for i in zip(posts, coms):
-            try:
-                db_sess.delete(i[0])
-            except Exception:
-                pass
-            try:
-                db_sess.delete(i[1])
-            except Exception:
-                pass
-        db_sess.delete(posts)
-        db_sess.delete(coms)
+        coms = db_sess.query(PrivateComments).filter(PrivateComments.group == id).all()
+        for i in posts:
+            db_sess.delete(i)
+        for i in coms:
+            db_sess.delete(i)
         db_sess.delete(group)
         db_sess.commit()
     return redirect('/communities')

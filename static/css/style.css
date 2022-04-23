@@ -1,0 +1,155 @@
+ul.main_page_nav {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #173753;
+    text-align: center;
+    padding: 10px;
+}
+
+.main_page_nav li {
+    display: inline-block;
+}
+
+ul.main_page_nav a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-family: 'Roboto Mono';
+}
+
+ul.main_page_nav a:hover {
+    background-color: #2892D7;
+    border-radius: 10px;
+}
+.sidebar {
+    height: 100%;
+    width: 150px;
+    position: -webkit-sticky;
+    position: sticky;
+    padding-top: 40px;
+    background-color: lightblue;
+    }
+    .sidebar div {
+    padding: 4px;
+    font-size: 24px;
+    display: block;
+    }
+
+body {
+    margin: 0;
+    background: #6DAEDB
+    }
+
+.header-main-page{
+    display: flex;
+    background: #2892D7;
+    height: 100px;
+    margin: 0px;
+    width: 100%;
+    text-align: center;
+    font-family: 'Roboto Mono';
+    align-items: center;
+}
+
+.footer_all {
+    background: #173753;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 80px;
+    font-family: 'Roboto Mono'
+    }
+
+.logo {
+    width: 60px;
+    float: left;
+    margin-right: 15px;
+    margin-left: 15px;
+}
+
+.brend {
+    float: left;
+    color: white;
+}
+
+.reg {
+    float: right;
+    margin-left: auto;
+    margin-right: 15px;
+}
+
+.content {
+    width: 60%;
+    background: #173753;
+    margin: auto;
+    font-family: 'Roboto Mono';
+    border-radius: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.content h1 {color: White;}
+.content p {color: white;}
+
+
+ul.main_footer {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #173753;
+    text-align: center;
+    padding: 10px;
+}
+
+.main_footer li {
+    display: inline-block;
+}
+
+ul.main_footer a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-family: 'Roboto Mono';
+}
+
+ul.main_footer a:hover {
+    background-color: #2892D7;
+    border-radius: 10px;
+}
+
+.header-main-page a {
+    font-family: 'Roboto Mono';
+    color: white;
+    text-decoration: none;
+}
+
+
+.inp_form {
+    color: white;
+    font-family: 'Roboto Mono';
+    width: 20%;
+    background-color:#173753;
+    margin: auto;
+    text-align: center;
+    padding-bottom: 10px;
+    border-radius: 10px;
+}
+
+.map_pages {
+    margin: auto;
+    width: 70%;
+    height: 500px;
+}
+
+.community_grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-gap: 1rem;
+  }

@@ -13,6 +13,8 @@ class PrivateComments(SqlAlchemyBase, SerializerMixin):
     creater = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey('users.id'))
     content = sqlalchemy.Column(sqlalchemy.String)
     private_post = sqlalchemy.Column(sqlalchemy.String, sqlalchemy.ForeignKey('private_post.id'))
+    group = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey('communities.id'))
 
     user = orm.relation('User')
     posted = orm.relation('PrivatePost')
+    communities = orm.relation('Communities')

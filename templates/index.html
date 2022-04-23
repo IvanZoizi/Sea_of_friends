@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@200&display=swap" rel="stylesheet">
-    <title>Главная страница</title>
+    <title>Sea of friends</title>
 </head>
 <body>
     <header class="header-main-page">
@@ -27,15 +27,17 @@
             <li><a href="/communities">СООБЩЕСТВА</a></li>
         </ul>
     </nav>
+    <p style="text-align: center; font-family: 'Roboto Mono'; color: white;">{% if current_user.id %}
+    <a style='color: white; font-family: "Roboto Mono"; text-decoration: none;' href="/add/post">Создать пост</a>{% endif %}</p>
     <main style="display: flex; align-items: center; padding-top: 20px;">
-        <section class="content">
-            {% for i in message %}
+        {% for i in message %}
+        <section class="community_grid" style="margin-left: 10px;">
                 <div>
-                    <h1>{{i.user.name}}</h1>
-                    <p>{{i.content}}</p>
+                    <p style="background: #173753; padding: 1rem; border-radius:10px; font-family: Roboto Mono; color: white">{{i.user.name}}<br>
+                    {{i.content}}</p>
                 </div>
-            {% endfor %}
         </section>
+        {% endfor %}
     </main>
     <footer class="footer_all">
         <ul class="main_footer">
